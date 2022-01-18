@@ -18,6 +18,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import Button from "@material-ui/core/Button";
+import $ from "jquery";
 
 const drawerWidth = 340;
 
@@ -134,16 +135,23 @@ export default function MiniDrawer() {
 
   const handleDrawerOpen = () => {
     setOpen(true);
+    $("#main").click();
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
+    $("#main").click();
+    console.log($("#main"));
   };
 
   const customDrawerOpen = () => {
+    $("#main").click();
     setCustomOpen((prevState) => {
-      if (prevState === false) {
-        handleDrawerClose();
+      // if (prevState === false) {
+      handleDrawerClose();
+      // }
+      if (prevState === true) {
+        handleDrawerOpen();
       }
       return !prevState;
     });
@@ -176,6 +184,7 @@ export default function MiniDrawer() {
         </Toolbar>
       </AppBar> */}
       <Drawer
+        onMouseDown={handleDrawerOpen}
         onMouseEnter={handleDrawerOpen}
         onMouseLeave={handleDrawerClose}
         variant="permanent"
@@ -251,7 +260,7 @@ export default function MiniDrawer() {
         </List> */}
       </Drawer>
       <div
-        className={clsx(classes.customDrawer, classes.pt, {
+        className={clsx(classes.customDrawer, "my-custom-drawer", classes.pt, {
           [classes.customDrawerOpen]: customOpen,
         })}
       >
@@ -312,9 +321,9 @@ export default function MiniDrawer() {
           })}
         </List>
       </div>
-      {/* <main className={classes.content}>
+      <main id="main" className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography paragraph>
+        {/* <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
           dolor purus non enim praesent elementum facilisis leo vel. Risus at
@@ -342,8 +351,8 @@ export default function MiniDrawer() {
           sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
-      </main> */}
+        </Typography> */}
+      </main>
     </div>
   );
 }
