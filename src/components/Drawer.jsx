@@ -19,6 +19,7 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import Button from "@material-ui/core/Button";
 import $ from "jquery";
+import { useEffect } from "react";
 
 const drawerWidth = 340;
 
@@ -141,7 +142,11 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
     $("#main").click();
-    console.log($("#main"));
+  };
+
+  const customDrawerClose = () => {
+    $("#main").click();
+    setCustomOpen(false);
   };
 
   const customDrawerOpen = () => {
@@ -156,6 +161,14 @@ export default function MiniDrawer() {
       return !prevState;
     });
   };
+
+  useEffect(() => {
+    if (customOpen) {
+      $("#policy-btn").addClass("active");
+    } else {
+      $("#policy-btn").removeClass("active");
+    }
+  }, [customOpen]);
 
   return (
     <div className={classes.root}>
@@ -211,7 +224,27 @@ export default function MiniDrawer() {
         </div> */}
         <Divider />
         <List className={clsx(classes.pt, classes.leftList)}>
-          <ListItem button className="left-list-item">
+          <ListItem
+            style={{ padding: 0, paddingLeft: "6px", marginBottom: "35px" }}
+          >
+            <ListItemIcon style={{ minWidth: "43px" }} classes={classes.icon}>
+              <img
+                src="./assets/logoG.png"
+                alt="logo"
+                style={{ width: "32px" }}
+              />
+            </ListItemIcon>
+            <ListItemText
+              style={{ fontWeight: 700 }}
+              className={clsx(classes.listItemText, "logo-text")}
+              primary="UPSURANCE"
+            />
+          </ListItem>
+          <ListItem
+            button
+            className="left-list-item"
+            onClick={customDrawerClose}
+          >
             <ListItemIcon style={{ minWidth: "52px" }} classes={classes.icon}>
               <InboxIcon style={{ fill: "#fff" }} />
             </ListItemIcon>
@@ -224,6 +257,7 @@ export default function MiniDrawer() {
             button
             className="left-list-item"
             onClick={customDrawerOpen}
+            id="policy-btn"
           >
             <ListItemIcon style={{ minWidth: "52px" }} classes={classes.icon}>
               <InboxIcon style={{ fill: "#fff" }} />

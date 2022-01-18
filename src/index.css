@@ -33,6 +33,15 @@ code {
   background-color: #21e3d2 !important;
 }
 
+.logo-text {
+  opacity: 0;
+  transition: 0.4s ease;
+}
+
+.drawer-open .logo-text {
+  opacity: 1;
+}
+
 .drawer-open .last-list-item img {
   display: none;
 }
@@ -46,6 +55,10 @@ code {
 }
 
 .MuiListItem-button:hover {
+  background-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+.MuiListItem-button.active {
   background-color: rgba(255, 255, 255, 0.24) !important;
 }
 
