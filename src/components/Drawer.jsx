@@ -112,6 +112,23 @@ const useStyles = makeStyles((theme) => ({
   rightList: {
     paddingTop: 40,
   },
+  fw700: {
+    fontWeight: 700,
+  },
+  logoContainer: { padding: 0, paddingLeft: "6px", marginBottom: "35px" },
+  logoIcon: { minWidth: "43px" },
+  logoImg: { width: "32px" },
+  navIcon: { fill: "#fff" },
+  lgNavItem: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    margin: ".225rem 0",
+  },
+  navLeft: {
+    display: "flex",
+    alignItems: "center",
+  },
 }));
 
 export default function MiniDrawer() {
@@ -176,19 +193,16 @@ export default function MiniDrawer() {
       >
         <Divider />
         <List className={clsx(classes.pt, classes.leftList)}>
-          <ListItem
-            style={{ padding: 0, paddingLeft: "6px", marginBottom: "35px" }}
-          >
-            <ListItemIcon style={{ minWidth: "43px" }} classes={classes.icon}>
+          <ListItem className={classes.logoContainer}>
+            <ListItemIcon className={classes.logoIcon}>
               <img
+                className={classes.logoImg}
                 src="./assets/logoG.png"
                 alt="logo"
-                style={{ width: "32px" }}
               />
             </ListItemIcon>
             <ListItemText
-              style={{ fontWeight: 700 }}
-              className={clsx(classes.listItemText, "logo-text")}
+              className={clsx(classes.listItemText, classes.fw700, "logo-text")}
               primary="UPSURANCE"
             />
           </ListItem>
@@ -197,8 +211,8 @@ export default function MiniDrawer() {
             className="left-list-item"
             onClick={customDrawerClose}
           >
-            <ListItemIcon style={{ minWidth: "52px" }} classes={classes.icon}>
-              <InboxIcon style={{ fill: "#fff" }} />
+            <ListItemIcon className={classes.icon}>
+              <InboxIcon className={classes.navIcon} />
             </ListItemIcon>
             <ListItemText
               className={classes.listItemText}
@@ -211,8 +225,8 @@ export default function MiniDrawer() {
             onClick={customDrawerOpen}
             id="policy-btn"
           >
-            <ListItemIcon style={{ minWidth: "52px" }} classes={classes.icon}>
-              <InboxIcon style={{ fill: "#fff" }} />
+            <ListItemIcon classes={classes.icon}>
+              <InboxIcon className={classes.navIcon} />
             </ListItemIcon>
             <ListItemText
               className={classes.listItemText}
@@ -258,28 +272,16 @@ export default function MiniDrawer() {
               text: "Draft",
               badgeText: "8",
             },
-          ].map((el) => {
+          ].map((el, idx) => {
             return (
               <ListItem
+                key={"nav-item" + idx}
                 button
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  margin: ".225rem 0",
-                }}
+                className={classes.lgNavItem}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <ListItemIcon
-                    style={{ minWidth: "52px" }}
-                    classes={classes.icon}
-                  >
-                    <InboxIcon style={{ fill: "#fff" }} />
+                <div className={classes.navLeft}>
+                  <ListItemIcon className={classes.icon}>
+                    <InboxIcon className={classes.navIcon} />
                   </ListItemIcon>
                   {el.text}
                 </div>
