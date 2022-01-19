@@ -15,27 +15,6 @@ import Button from "@material-ui/core/Button";
 const drawerWidth = 340;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
   hide: {
     display: "none",
   },
@@ -68,17 +47,6 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "hidden",
     width: 80,
   },
-  toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
   listItemText: {
     color: "#fff",
   },
@@ -92,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
     width: 260,
     position: "fixed",
     left: -340,
+    transition: "0.4s ease",
   },
   customDrawerOpen: {
     left: 80,
@@ -115,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
   fw700: {
     fontWeight: 700,
   },
-  logoContainer: { padding: 0, paddingLeft: "6px", marginBottom: "35px" },
+  logoContainer: { padding: 0, paddingLeft: "8px", marginBottom: "35px" },
   logoIcon: { minWidth: "43px" },
   logoImg: { width: "32px" },
   navIcon: { fill: "#fff" },
@@ -123,11 +92,71 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  navItem: {
     margin: ".225rem 0",
+    borderRadius: "6px",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.24)",
+    },
+    "&.active": {
+      backgroundColor: "rgba(255, 255, 255, 0.24)",
+    },
+  },
+  leftNavItem: {
+    paddingLeft: "11px",
   },
   navLeft: {
     display: "flex",
     alignItems: "center",
+  },
+  wrapOpen: {
+    width: drawerWidth,
+  },
+  logoText: {
+    opacity: 0,
+    transition: ".25s ease",
+  },
+  showLogoText: {
+    opacity: 1,
+  },
+  quoteBtnContainer: {
+    position: "absolute",
+    left: "50%",
+    transform: "translateX(-50%)",
+    bottom: "20px",
+    display: "flex",
+    justifyContent: "center",
+  },
+  quoteImg: {
+    width: "28px",
+  },
+  hideQuoteImg: {
+    opacity: 0,
+  },
+  quoteBtn: {
+    display: "none",
+    textTransform: "none",
+    width: "100%",
+    transition: ".25s ease",
+    backgroundColor: "#21e3d2",
+    "&:hover": {
+      backgroundColor: "#21e3d2",
+    },
+  },
+  showQuoteBtn: {
+    display: "inline-flex",
+  },
+  badge: {
+    width: "22px",
+    height: "14px",
+    backgroundColor: "#fff",
+    color: "#331976",
+    fontSize: "8px",
+    textAlign: "center",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    lineHeight: "1.75",
   },
 }));
 
@@ -174,74 +203,102 @@ export default function MiniDrawer() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Drawer
-        onMouseDown={handleDrawerOpen}
-        onMouseEnter={handleDrawerOpen}
-        onMouseLeave={handleDrawerClose}
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          "drawer-open": open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
+      <div className={clsx({ [classes.wrapOpen]: customOpen })}>
+        <Drawer
+          onMouseDown={handleDrawerOpen}
+          onMouseEnter={handleDrawerOpen}
+          onMouseLeave={handleDrawerClose}
+          variant="permanent"
+          className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
+            "drawer-open": open,
             [classes.drawerClose]: !open,
-          }),
-        }}
-      >
-        <Divider />
-        <List className={clsx(classes.pt, classes.leftList)}>
-          <ListItem className={classes.logoContainer}>
-            <ListItemIcon className={classes.logoIcon}>
-              <img
-                className={classes.logoImg}
-                src="./assets/logoG.png"
-                alt="logo"
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+        >
+          <Divider />
+          <List className={clsx(classes.pt, classes.leftList)}>
+            <ListItem className={classes.logoContainer}>
+              <ListItemIcon className={classes.logoIcon}>
+                <img
+                  className={classes.logoImg}
+                  src="./assets/logoG.png"
+                  alt="logo"
+                />
+              </ListItemIcon>
+              <ListItemText
+                className={clsx(
+                  classes.listItemText,
+                  classes.fw700,
+                  classes.logoText,
+                  {
+                    [classes.showLogoText]: open,
+                  }
+                )}
+                primary="UPSURANCE"
               />
-            </ListItemIcon>
-            <ListItemText
-              className={clsx(classes.listItemText, classes.fw700, "logo-text")}
-              primary="UPSURANCE"
-            />
-          </ListItem>
-          <ListItem
-            button
-            className="left-list-item"
-            onClick={customDrawerClose}
-          >
-            <ListItemIcon className={classes.icon}>
-              <InboxIcon className={classes.navIcon} />
-            </ListItemIcon>
-            <ListItemText
-              className={classes.listItemText}
-              primary="Dashboard"
-            />
-          </ListItem>
-          <ListItem
-            button
-            className="left-list-item"
-            onClick={customDrawerOpen}
-            id="policy-btn"
-          >
-            <ListItemIcon classes={classes.icon}>
-              <InboxIcon className={classes.navIcon} />
-            </ListItemIcon>
-            <ListItemText
-              className={classes.listItemText}
-              primary="Policy Management"
-            />
-          </ListItem>
-          <ListItem className="last-list-item">
-            <img src="./assets/bottom-btn.PNG" alt="btn" />
-            <Button variant="contained">Request a quote</Button>
-          </ListItem>
-        </List>
-      </Drawer>
+            </ListItem>
+            {[
+              {
+                text: "Dasboard",
+                onClick: customDrawerClose,
+                id: "dashboard-btn",
+              },
+              {
+                text: "Policy Management",
+                onClick: customDrawerOpen,
+                id: "policy-btn",
+              },
+            ].map((el) => {
+              const { id, text, onClick } = el;
+
+              return (
+                <ListItem
+                  id={id}
+                  button
+                  className={clsx(classes.leftNavItem, classes.navItem)}
+                  onClick={onClick}
+                >
+                  <ListItemIcon className={classes.icon}>
+                    <InboxIcon className={classes.navIcon} />
+                  </ListItemIcon>
+                  <ListItemText
+                    className={classes.listItemText}
+                    primary={text}
+                  />
+                </ListItem>
+              );
+            })}
+            <ListItem className={classes.quoteBtnContainer}>
+              <img
+                className={clsx(
+                  { [classes.hideQuoteImg]: open },
+                  classes.quoteImg
+                )}
+                src="./assets/bottom-btn.PNG"
+                alt="btn"
+              />
+              <Button
+                className={clsx(
+                  { [classes.showQuoteBtn]: open },
+                  classes.quoteBtn
+                )}
+                variant="contained"
+              >
+                Request a quote
+              </Button>
+            </ListItem>
+          </List>
+        </Drawer>
+      </div>
       <div
         data-target="#policy-btn"
-        className={clsx(classes.customDrawer, "my-custom-drawer", classes.pt, {
+        className={clsx(classes.customDrawer, classes.pt, {
           [classes.customDrawerOpen]: customOpen,
         })}
         ref={drawerRef}
@@ -250,7 +307,7 @@ export default function MiniDrawer() {
           Policy Management
         </Typography>
 
-        <List className={classes.rightList}>
+        <List className={clsx(classes.rightList)}>
           {[
             {
               text: "On cover",
@@ -277,7 +334,7 @@ export default function MiniDrawer() {
               <ListItem
                 key={"nav-item" + idx}
                 button
-                className={classes.lgNavItem}
+                className={clsx(classes.lgNavItem, classes.navItem)}
               >
                 <div className={classes.navLeft}>
                   <ListItemIcon className={classes.icon}>
@@ -285,7 +342,7 @@ export default function MiniDrawer() {
                   </ListItemIcon>
                   {el.text}
                 </div>
-                <div className="badge">{el.badgeText}</div>
+                <div className={classes.badge}>{el.badgeText}</div>
               </ListItem>
             );
           })}
