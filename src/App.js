@@ -13,7 +13,6 @@ function App() {
   return (
     <div className={classes.root}>
       <Drawer />
-      Something
     </div>
   );
 }
