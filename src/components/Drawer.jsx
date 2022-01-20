@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -165,6 +165,7 @@ export default function MiniDrawer() {
   const drawerRef = useRef();
   const [open, setOpen] = React.useState(false);
   const [customOpen, setCustomOpen] = React.useState(false);
+  const [openedSubDrawer, setOpenedSubDrawer] = React.useState("");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -189,16 +190,73 @@ export default function MiniDrawer() {
   };
 
   useEffect(() => {
+    const drawerTarget = drawerRef.current.dataset.target;
+
     if (customOpen) {
-      document
-        .querySelector(drawerRef.current.dataset.target)
-        .classList.add("active");
+      document.querySelector(drawerTarget).classList.add("active");
+      setOpenedSubDrawer(drawerTarget);
     } else {
-      document
-        .querySelector(drawerRef.current.dataset.target)
-        .classList.remove("active");
+      document.querySelector(drawerTarget).classList.remove("active");
+      setOpenedSubDrawer("");
     }
   }, [customOpen]);
+
+  const menuData = [
+    {
+      text: "Dasboard",
+      // onClick: () => customDrawerOpen(),
+      id: "dashboard-btn",
+      subDrawerItems: [
+        {
+          text: "On cover",
+          badgeText: "3",
+        },
+        {
+          text: "Submitted",
+          badgeText: "12",
+        },
+        {
+          text: "Quoted",
+          badgeText: "21",
+        },
+        {
+          text: "Indicated",
+          badgeText: "15",
+        },
+        {
+          text: "Draft",
+          badgeText: "8",
+        },
+      ],
+    },
+    {
+      text: "Policy Management",
+      // onClick: customDrawerOpen,
+      id: "policy-btn",
+      subDrawerItems: [
+        {
+          text: "On cover",
+          badgeText: "3",
+        },
+        {
+          text: "Submitted",
+          badgeText: "12",
+        },
+        {
+          text: "Quoted",
+          badgeText: "21",
+        },
+        {
+          text: "Indicated",
+          badgeText: "15",
+        },
+        {
+          text: "Draft",
+          badgeText: "8",
+        },
+      ],
+    },
+  ];
 
   return (
     <div className={classes.root}>
@@ -243,26 +301,15 @@ export default function MiniDrawer() {
                 primary="UPSURANCE"
               />
             </ListItem>
-            {[
-              {
-                text: "Dasboard",
-                onClick: customDrawerClose,
-                id: "dashboard-btn",
-              },
-              {
-                text: "Policy Management",
-                onClick: customDrawerOpen,
-                id: "policy-btn",
-              },
-            ].map((el) => {
-              const { id, text, onClick } = el;
+            {menuData.map((el) => {
+              const { id, text } = el;
 
               return (
                 <ListItem
                   id={id}
                   button
                   className={clsx(classes.leftNavItem, classes.navItem)}
-                  onClick={onClick}
+                  onClick={(e) => customDrawerOpen(e, id)}
                 >
                   <ListItemIcon className={classes.icon}>
                     <InboxIcon className={classes.navIcon} />
@@ -296,7 +343,45 @@ export default function MiniDrawer() {
           </List>
         </Drawer>
       </div>
-      <div
+      {menuData.map((el, idx) => {
+        const { id, text, subDrawerItems } = el;
+
+        return (
+          <div
+            data-target={"#" + id}
+            className={clsx(classes.customDrawer, classes.pt, {
+              [classes.customDrawerOpen]: customOpen,
+            })}
+            ref={drawerRef}
+          >
+            <Typography variant="subtitle1" color="inherit">
+              {text}
+            </Typography>
+
+            <List className={clsx(classes.rightList)}>
+              {subDrawerItems &&
+                subDrawerItems.map((el, idx) => {
+                  return (
+                    <ListItem
+                      key={"nav-item" + idx}
+                      button
+                      className={clsx(classes.lgNavItem, classes.navItem)}
+                    >
+                      <div className={classes.navLeft}>
+                        <ListItemIcon className={classes.icon}>
+                          <InboxIcon className={classes.navIcon} />
+                        </ListItemIcon>
+                        {el.text}
+                      </div>
+                      <div className={classes.badge}>{el.badgeText}</div>
+                    </ListItem>
+                  );
+                })}
+            </List>
+          </div>
+        );
+      })}
+      {/* <div
         data-target="#policy-btn"
         className={clsx(classes.customDrawer, classes.pt, {
           [classes.customDrawerOpen]: customOpen,
@@ -347,7 +432,7 @@ export default function MiniDrawer() {
             );
           })}
         </List>
-      </div>
+      </div> */}
     </div>
   );
 }
