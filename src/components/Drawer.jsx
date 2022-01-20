@@ -102,6 +102,9 @@ const useStyles = makeStyles((theme) => ({
     "&.active": {
       backgroundColor: "rgba(255, 255, 255, 0.24)",
     },
+    "&.side-nav-item__active": {
+      backgroundColor: "rgba(255, 255, 255, 0.24)",
+    },
   },
   leftNavItem: {
     paddingLeft: "11px",
@@ -200,6 +203,18 @@ export default function MiniDrawer() {
     });
   };
 
+  const setNavItemActive = (e) => {
+    const navItems = document.querySelectorAll(".side-nav-item__active");
+
+    if (navItems) {
+      navItems.forEach((el) => {
+        el.classList.remove("side-nav-item__active");
+      });
+    }
+    console.log(e.target);
+    e.currentTarget.classList.add("side-nav-item__active");
+  };
+
   useEffect(() => {
     const leftDrawerItems = document.querySelectorAll(".left-drawer-item");
     if (leftDrawerItems) {
@@ -217,6 +232,10 @@ export default function MiniDrawer() {
       }
     }
   }, [customOpen]);
+
+  useEffect(() => {
+    console.log("updated");
+  });
 
   const menuData = [
     {
@@ -386,6 +405,7 @@ export default function MiniDrawer() {
                       key={"nav-item" + idx}
                       button
                       className={clsx(classes.lgNavItem, classes.navItem)}
+                      onClick={setNavItemActive}
                     >
                       <div className={classes.navLeft}>
                         <ListItemIcon className={classes.icon}>
