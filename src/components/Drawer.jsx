@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -164,8 +164,10 @@ export default function MiniDrawer() {
   const classes = useStyles();
   const drawerRef = useRef();
   const [open, setOpen] = React.useState(false);
-  const [customOpen, setCustomOpen] = React.useState(false);
-  const [openedSubDrawer, setOpenedSubDrawer] = React.useState("");
+  const [customOpen, setCustomOpen] = React.useState({
+    state: false,
+    target: "",
+  });
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -175,36 +177,50 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
-  const customDrawerClose = () => {
-    setCustomOpen(false);
-  };
+  const customDrawerOpen = (e, target) => {
+    e.stopPropagation();
 
-  const customDrawerOpen = (e) => {
     setCustomOpen((prevState) => {
+      let toSet = {};
       handleDrawerClose();
-      if (prevState === true) {
+
+      if (!prevState.state) {
+        toSet.state = true;
+        handleDrawerClose();
+      } else if (prevState.state && prevState.target === target) {
+        toSet.state = false;
         handleDrawerOpen();
+      } else if (prevState.state === true && prevState.target !== target) {
+        toSet.state = true;
+        handleDrawerClose();
       }
-      return !prevState;
+
+      toSet.target = target;
+      return { ...prevState, ...toSet };
     });
   };
 
   useEffect(() => {
-    const drawerTarget = drawerRef.current.dataset.target;
-
-    if (customOpen) {
-      document.querySelector(drawerTarget).classList.add("active");
-      setOpenedSubDrawer(drawerTarget);
-    } else {
-      document.querySelector(drawerTarget).classList.remove("active");
-      setOpenedSubDrawer("");
+    const leftDrawerItems = document.querySelectorAll(".left-drawer-item");
+    if (leftDrawerItems) {
+      leftDrawerItems.forEach((el) => {
+        el.classList.remove("active");
+      });
+    }
+    const drawerTarget = customOpen.target;
+    if (drawerTarget) {
+      const drawerTarget = "#" + customOpen.target;
+      if (customOpen.state) {
+        document.querySelector(drawerTarget).classList.add("active");
+      } else {
+        document.querySelector(drawerTarget).classList.remove("active");
+      }
     }
   }, [customOpen]);
 
   const menuData = [
     {
       text: "Dasboard",
-      // onClick: () => customDrawerOpen(),
       id: "dashboard-btn",
       subDrawerItems: [
         {
@@ -231,7 +247,6 @@ export default function MiniDrawer() {
     },
     {
       text: "Policy Management",
-      // onClick: customDrawerOpen,
       id: "policy-btn",
       subDrawerItems: [
         {
@@ -261,7 +276,7 @@ export default function MiniDrawer() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <div className={clsx({ [classes.wrapOpen]: customOpen })}>
+      <div className={clsx({ [classes.wrapOpen]: customOpen.state })}>
         <Drawer
           onMouseDown={handleDrawerOpen}
           onMouseEnter={handleDrawerOpen}
@@ -308,7 +323,11 @@ export default function MiniDrawer() {
                 <ListItem
                   id={id}
                   button
-                  className={clsx(classes.leftNavItem, classes.navItem)}
+                  className={clsx(
+                    "left-drawer-item",
+                    classes.leftNavItem,
+                    classes.navItem
+                  )}
                   onClick={(e) => customDrawerOpen(e, id)}
                 >
                   <ListItemIcon className={classes.icon}>
@@ -350,7 +369,8 @@ export default function MiniDrawer() {
           <div
             data-target={"#" + id}
             className={clsx(classes.customDrawer, classes.pt, {
-              [classes.customDrawerOpen]: customOpen,
+              [classes.customDrawerOpen]:
+                customOpen.state && customOpen.target === id,
             })}
             ref={drawerRef}
           >
@@ -381,58 +401,6 @@ export default function MiniDrawer() {
           </div>
         );
       })}
-      {/* <div
-        data-target="#policy-btn"
-        className={clsx(classes.customDrawer, classes.pt, {
-          [classes.customDrawerOpen]: customOpen,
-        })}
-        ref={drawerRef}
-      >
-        <Typography variant="subtitle1" color="inherit">
-          Policy Management
-        </Typography>
-
-        <List className={clsx(classes.rightList)}>
-          {[
-            {
-              text: "On cover",
-              badgeText: "3",
-            },
-            {
-              text: "Submitted",
-              badgeText: "12",
-            },
-            {
-              text: "Quoted",
-              badgeText: "21",
-            },
-            {
-              text: "Indicated",
-              badgeText: "15",
-            },
-            {
-              text: "Draft",
-              badgeText: "8",
-            },
-          ].map((el, idx) => {
-            return (
-              <ListItem
-                key={"nav-item" + idx}
-                button
-                className={clsx(classes.lgNavItem, classes.navItem)}
-              >
-                <div className={classes.navLeft}>
-                  <ListItemIcon className={classes.icon}>
-                    <InboxIcon className={classes.navIcon} />
-                  </ListItemIcon>
-                  {el.text}
-                </div>
-                <div className={classes.badge}>{el.badgeText}</div>
-              </ListItem>
-            );
-          })}
-        </List>
-      </div> */}
     </div>
   );
 }
